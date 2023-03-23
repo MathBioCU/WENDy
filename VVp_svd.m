@@ -1,3 +1,8 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%% WENDy: covariance-corrected ODE parameter estimation
+%%%%%%%%%%%% Copyright 2023, All Rights Reserved
+%%%%%%%%%%%% Code by Daniel Ames Messenger
+
 function [V,Vp] = VVp_svd(V,K_min,t,toggle_VVp_svd)
     m = length(t);
     dt = mean(diff(t));

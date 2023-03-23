@@ -1,3 +1,8 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%% WENDy: covariance-corrected ODE parameter estimation
+%%%%%%%%%%%% Copyright 2023, All Rights Reserved
+%%%%%%%%%%%% Code by Daniel Ames Messenger
+
 %% print results
 
 disp(['-----------------'])

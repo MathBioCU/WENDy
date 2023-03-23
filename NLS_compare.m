@@ -1,3 +1,8 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%% WENDy: covariance-corrected ODE parameter estimation
+%%%%%%%%%%%% Copyright 2023, All Rights Reserved
+%%%%%%%%%%%% Code by Daniel Ames Messenger
+
 function out=NLS_compare(xobs,params,rhs_pv,tobs,x0_nls,tol_ode_nls,odemethod_nls,thresh)
     yobs = get_sol(params,rhs_pv,tobs,x0_nls,tol_ode_nls,odemethod_nls,thresh);
     out = norm(vecnorm(xobs(1:size(yobs,1),:)-yobs))^2;

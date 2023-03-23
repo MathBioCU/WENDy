@@ -1,3 +1,8 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%% WENDy: covariance-corrected ODE parameter estimation
+%%%%%%%%%%%% Copyright 2023, All Rights Reserved
+%%%%%%%%%%%% Code by Daniel Ames Messenger
+
 function m = get_tf_support(phi,N,tauhat,k_x)
     ks = ((0:N-1)-floor(N/2)).^2;
     errs = zeros(floor(N/2)-1,1);

@@ -1,43 +1,7 @@
-% f = @(x) sin(3*x).*cos(10*x).*sqrt(0.1+abs(x).^3);
-% % f = @(x) x;
-% x = linspace(0,2,10^3)';
-% fx = f(x);
-% dx = mean(diff(x));
-% 
-% sigma = 0.2*rms(fx);
-% fx_obs = fx + sigma*randn(size(fx));
-% 
-% max_points=[]; 
-% init_m_fac = []; 
-% expand_fac = []; 
-% max_filter_fac = [];
-% maxits = []; 
-% deriv_tol=[]; 
-% verbose = 1;
-% tic,
-% clc
-% [m,sigma_est,its] = get_optimal_SMAF(x,fx_obs,max_points,init_m_fac,max_filter_fac,expand_fac,maxits,deriv_tol,verbose);
-% toc
-% 
-% deriv_order = 0;
-% 
-% filter=ones(1,2*m+1); filter=filter/norm(filter,1);
-% fx_rec = conv([fliplr(fx_obs(1:m));fx_obs;fliplr(fx_obs(end-m+1:end))],(-1)^(deriv_order)*filter,'valid');
-% 
-% fx_d = f(x);
-% 
-% var = norm(filter,2)^2*sigma^2;
-% bias = rms(conv(fx,filter,'valid') - fx_d(m+1:end-m));
-% 
-% figure(1)
-% subplot(2,1,1)
-% plot(x,fx_obs,'r.','LineWidth',2)
-% 
-% subplot(2,1,2)
-% plot(x,fx_d,'k',x,fx_rec,'g--','LineWidth',2)
-% title(['rel err:',num2str(rms(fx_d(m+1:end-m)-fx_rec(m+1:end-m))/rms(fx_d),'%.1u'), ...
-%     '; th. Var:', num2str(var,'%.1u') '; th. bias^2:',num2str(bias^2,'%.1u'),'; th. rel err:', num2str(sqrt(bias^2+var)/rms(fx_d),'%.1u')])
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%% WENDy: covariance-corrected ODE parameter estimation
+%%%%%%%%%%%% Copyright 2023, All Rights Reserved
+%%%%%%%%%%%% Code by Daniel Ames Messenger
 
 function [m,sigma_est,its] = get_optimal_SMAF(x,fx_obs,max_points,init_m_fac,max_filter_fac,expand_fac,maxits,deriv_tol,verbose)
 

@@ -1,15 +1,7 @@
-% t = [0:0.025:30]; %vanderpol (up to 20% noise)
-% t = [0:0.08:24]; %duffing (up to 20% noise)
-% t = [0:0.02:6]; %lotka-volterra (up to 20% noise)
-% t = [0:0.02:6]; %lorenz (up to 20% noise)
-% t = [0:0.08:24]; %rossler (up to 15% noise)
-% t = [0:0.05:20]; %oregonator (up to 2% noise)
-% t = [0:0.005:10]; %Hindmarsh-Rose (up to 4% noise)
-% t = [0:0.15:30]; %pendulum (up to 20% noise)
-% t = [0:0.05:15]; %cubicOsc (up to 20% noise)
-% t = [0:0.04:4]; %Gompertz (up to 10% noise, but jac correct makes it worse)
-% t = [0:0.1:20]; %FitzHugh (up to 15% noise)
-% t = [0:0.1:500]; %gyroceptron 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%% WENDy: covariance-corrected ODE parameter estimation
+%%%%%%%%%%%% Copyright 2023, All Rights Reserved
+%%%%%%%%%%%% Code by Daniel Ames Messenger
 
 function [features,params,x0,t] = get_ode_features(ode_name)
     if isequal(ode_name,'Logistic_Growth')

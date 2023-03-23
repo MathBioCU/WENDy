@@ -1,7 +1,7 @@
-% inc = 1;
-% sub = 3;
-% q = 0;
-% s=2;
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%% WENDy: covariance-corrected ODE parameter estimation
+%%%%%%%%%%%% Copyright 2023, All Rights Reserved
+%%%%%%%%%%%% Code by Daniel Ames Messenger
 
 function mt = rad_select(t0,y,phifun,inc,sub,q,s,m_min,m_max,pow)
     

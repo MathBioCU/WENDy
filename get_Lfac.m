@@ -1,3 +1,8 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%% WENDy: covariance-corrected ODE parameter estimation
+%%%%%%%%%%%% Copyright 2023, All Rights Reserved
+%%%%%%%%%%%% Code by Daniel Ames Messenger
+
 function [L0,L1] = get_Lfac(Jac_mat,Js,V_cell,Vp_cell)
     [~,d,M] = size(Jac_mat);
     Jac_mat = permute(Jac_mat,[2 3 1]);

@@ -203,7 +203,7 @@ if toggle_plot
     plot(1:length(Res_full),[w_error_response int_error nonlin_res],'-.','LineWidth',2.5);
     xlim([1 length(b_0)])
     ylim(max(abs(Res_full))*[-1.5 1.5])
-    legend({'{\bfe}_\Theta','{\bfe}_{int}','\bfh'},'location','best','box','off')
+    legend({'\bfe','{\bfe}_{int}','\bfh'},'location','best','box','off')
     title('other residual components','fontsize',9)
     xlabel('row num (k)')
     grid on

@@ -6,19 +6,19 @@ odes={'wendydata_Logistic_Growth.mat',...
     'wendydata_Hindmarsh-Rose.mat',...
     'wendydata_biochemM1.mat'};
 
-ode_num = 1;                       % select ODE from list above
+ode_num = 5;                       % select ODE from list above
 load(odes{ode_num},'t','x','features','params','x0','true_vec','rhs_p');
 
-subsamp = 2;                        % subsample data in time
+subsamp = 8;                       % subsample data in time
 tobs = t(1:subsamp:end); xsub = x(1:subsamp:end,:);
 [M,nstates] = size(xsub);
 
 %% add noise
 
-noise_ratio = 0.1;
+rng('shuffle');
+noise_ratio = 0.05;
 noise_dist = 0;
 noise_alg = 0;
-rng('shuffle');
 rng_seed = rng().Seed; rng(rng_seed);
 [xobs,noise,~,sigma] = gen_noise(xsub,noise_ratio,noise_dist,noise_alg);
 
@@ -29,8 +29,8 @@ wendy_snf_params;
 
 %%% set weak integration
 phifun = phifuns{1};                % defined in wendy_snf_params.m
-meth = 'mtmin';
-mt_params = 2.^(0:3);
+meth = 'mtmin';                     % 'mtmin','FFT','direct','timefrac'
+mt_params = 2.^(0:3);               % see get_rad.m
 K_max = 5000;
 K_min = length(true_vec)*2;
 mt_max = max(floor((M-1)/2)-K_min,1);
@@ -61,37 +61,40 @@ bnds = {[],[]};
 odemethod_nls = 'ode15s'; % 'ode15s', 'ode45'
 sigma_x0_nls = 0;
 param_init_true = 1;
-
 sigma_param_init_nls = 0.25;
 
 x0_nls = x0est(xobs,x0,sigma_x0_nls);
-thresh = 2*max(vecnorm(xobs,inf,2));
+thresh = 10*max(vecnorm(xobs,inf,2));
 rhs_pv = @(x,params) rhs_p(x,vec2cell(params,cellfun(@(x)length(x),features)));
-
 fun = @(xobs,params) NLS_compare(xobs,params,rhs_pv,tobs,x0_nls,tol_ode_nls,odemethod_nls,thresh);
 if param_init_true==1
+    % uniform / sign preserving random initial guess
     param_init = true_vec+2*sqrt(3)*(rand(length(true_vec),1)-0.5).*abs(true_vec)*sigma_param_init_nls;
-elseif param_init_true==2
-    param_init = w_hat;
-elseif param_init_true==3
-    param_init = G_0 \ b_0;
-elseif param_init_true == 4
+elseif param_init_true == 2
+    % normally distributed random initial guess
     param_init = randn(size(true_vec))*sigma_param_init_nls;
+elseif param_init_true == 3
+    % WENDy initial guess
+    param_init = w_hat;
+elseif param_init_true==4
+    % weak-form OLS initial guess
+    param_init = G_0 \ b_0;
 end
 options_nls = optimoptions(@lsqnonlin,...
     'Algorithm','Levenberg-Marquardt',...
     'Display','iter',...
     'MaxIterations',500,'MaxFunctionEvaluations',2000,...
     'OptimalityTolerance',1e-8,'StepTolerance',1e-8);
-tic,
 if toggle_nls==1
+    tic,
     param_nls = lsqnonlin(@(params)fun(xobs,params),param_init,bnds{:},options_nls);
     err_NLS = norm(true_vec-param_nls,err_norm)/norm(true_vec,err_norm);
+    total_time_nls = toc;
 else
     param_nls = true_vec*0;
-    err_NLS = 0;
+    err_NLS = [];
+    total_time_nls = [];
 end
-total_time_nls = toc;
 
 %% display results
 

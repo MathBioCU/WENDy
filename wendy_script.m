@@ -6,17 +6,17 @@ odes={'wendydata_Logistic_Growth.mat',...
     'wendydata_Hindmarsh-Rose.mat',...
     'wendydata_biochemM1.mat'};
 
-ode_num = 2;                       % select ODE from list above
+ode_num = 4;                       % select ODE from list above
 load(odes{ode_num},'t','x','features','params','x0','true_vec','rhs_p');
 
-subsamp = 2;                       % subsample data in time
+subsamp = 4;                       % subsample data in time
 tobs = t(1:subsamp:end); xsub = x(1:subsamp:end,:);
 [M,nstates] = size(xsub);
 
 %% add noise
 
 rng('shuffle');
-noise_ratio = 0.2;
+noise_ratio = 0.02;
 noise_dist = 0;
 noise_alg = 0;
 rng_seed = rng().Seed; rng(rng_seed);
@@ -40,7 +40,7 @@ mt_cell = cellfun(@(x,y) [x,{y}], repmat({{phifun,meth}},length(mt_params),1),nu
 %% post-processing options
 
 toggle_plot = 1;
-toggle_ddd = 0;
+toggle_ddd = 1;
 toggle_nls = 0;
 
 %% run WENDy

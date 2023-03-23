@@ -140,6 +140,7 @@ function [w_hat,res,res_true,res_0,res_0_true,w_hat_its,errs,V_cell,Vp_cell,...
     end
 
     if pval<pvalmin
+        disp(['error: WENDy iterates diverged'])
         [~,ind] = max(pvals);
         w_hat = w_hat_its(:,ind);        
         res = [res res(:,ind)];

@@ -11,7 +11,7 @@ odes={'wendydata_Logistic_Growth.mat',...
     'wendydata_Hindmarsh-Rose.mat',...
     'wendydata_biochemM1.mat'};
 
-ode_num = 4;                       % select ODE from list above
+ode_num = 5;                       % select ODE from list above
 load(odes{ode_num},'t','x','features','params','x0','true_vec','rhs_p');
 
 subsamp = 4;                       % subsample data in time
@@ -20,8 +20,8 @@ tobs = t(1:subsamp:end); xsub = x(1:subsamp:end,:);
 
 %% add noise
 
-rng('shuffle');
-noise_ratio = 0.02;
+rng(1);
+noise_ratio = 0.05;
 noise_dist = 0;
 noise_alg = 0;
 rng_seed = rng().Seed; rng(rng_seed);

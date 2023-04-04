@@ -7,7 +7,7 @@ function [w_hat,res,res_true,res_0,res_0_true,w_hat_its,errs,V_cell,Vp_cell,...
     Theta_cell,mt,xobs,Jac_mat,G_0,b_0,RT,stdW,mseW,CovW] = wendy_fcn(...
     xobs,tobs,features,true_vec,toggle_smooth,...
     mt_cell,mt_min,mt_max,K_min,K_max,center_scheme,toggle_VVp_svd,...
-    w0,optim_params,err_norm,iter_diff_tol,max_iter,diag_reg,pvalmin,check_pval_it)
+    w0,optim_params,err_norm,iter_diff_tol,max_iter,diag_reg,pvalmin,check_pval_it,use_true)
 
     %%% get dimensions
     param_length_vec = cellfun(@(x)length(x),features);
@@ -113,14 +113,17 @@ function [w_hat,res,res_true,res_0,res_0_true,w_hat_its,errs,V_cell,Vp_cell,...
     while all([check>iter_diff_tol,iter<max_iter,pval>pvalmin])
 
         %%% update covariance
-        [RT,~,~,~] = get_RT(L0,L1,w_hat,diag_reg);
-%         [RT,~,~,~] = get_RT(L0,L1,true_vec,diag_reg); % uncomment to use true params in covariance
+        if use_true
+            [RT,~,~,~] = get_RT(L0,L1,true_vec,diag_reg);
+        else
+            [RT,~,~,~] = get_RT(L0,L1,w_hat,diag_reg);
+        end
         G = RT \ G_0;
         b = RT \ b_0;
 
         %%% update parameters
         w_hat = wendy_opt(G,b,optim_params{:});
-        res_n = (G*w_hat-b);
+        res_n = G*w_hat-b;
 
         %%% check stopping conditions
         [~,pvals(iter+1),~]=swtest(res_n);
@@ -128,7 +131,7 @@ function [w_hat,res,res_true,res_0,res_0_true,w_hat_its,errs,V_cell,Vp_cell,...
             pval = pvals(iter+1);
         end
         check = norm(w_hat_its(:,end)-w_hat)/norm(w_hat_its(:,end));
-        iter = iter +1;
+        iter = iter + 1;
         
         %%% collect quantities of interest
         res = [res res_n];

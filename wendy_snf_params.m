@@ -16,7 +16,7 @@ eta = 9;
 phifuns = {@(x) exp(-eta*(1-x.^2).^(-1)), @(x) (1-x.^2).^eta};
 center_scheme = 'uni';
 toggle_VVp_svd = NaN; % 0, no SVD reduction; in (0,1), truncates Frobenious norm; NaN, truncates SVD according to cornerpoint of cumulative sum of singular values
-submt = 2.1;
+submt = 3;
 
 %%% set jacobian correction params
 max_iter = 100;

@@ -112,9 +112,10 @@ if toggle_plot
     %%% p-values
     subplot(3,3,3)
     pvals = arrayfunvec(res,@(v)outn(@swtest,v,2),1);
+    pvals_0 = arrayfunvec(res_0,@(v)outn(@swtest,v,2),1);
     plot(pvals,'o-')
     xlim([1 length(errs)])
-    title(['p-val({OLS})=',num2str(pvals(1)),...
+    title(['p-val({OLS})=',num2str(pvals_0(1)),...
         ', p-val({WENDy})=',num2str(pvals(end))],'fontsize',9)
     xlabel('iter')
     legend('p-val({\bf w^{(n)}})','location','best','box','off')

@@ -11,7 +11,7 @@ odes={'wendydata_Logistic_Growth.mat',...
     'wendydata_Hindmarsh-Rose.mat',...
     'wendydata_biochemM1.mat'};
 
-ode_num = 5;                       % select ODE from list above
+ode_num = 1;                       % select ODE from list above
 load(odes{ode_num},'t','x','features','params','x0','true_vec','rhs_p');
 custom_ode;
 

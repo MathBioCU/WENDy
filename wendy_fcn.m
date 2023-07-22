@@ -107,7 +107,7 @@ function [w_hat,res,res_true,res_0,res_0_true,w_hat_its,errs,V_cell,Vp_cell,...
         errs = norm(abs(w0-true_vec)./abs(true_vec),-err_norm);
     end
     iter = 1; check = 1; pval=1;
-    RT = speye(size(b_0,1));
+    RT = eye(size(b_0,1));
     [~,pvals,~]=swtest(res);
 
     while all([check>iter_diff_tol,iter<max_iter,pval>pvalmin])

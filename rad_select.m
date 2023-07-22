@@ -7,6 +7,8 @@ function mt = rad_select(t0,y,phifun,inc,sub,q,s,m_min,m_max,pow)
     
     if isempty(phifun)
         mt = m_min;
+    elseif m_max<=m_min
+        mt = m_min;
     else
         [M,nstates] = size(y);
         dt = mean(diff(t0));

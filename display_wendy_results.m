@@ -72,7 +72,7 @@ phifft = phifft./max(phifft,[],2);
 %%% compute conf intervals
 xflip = [1:length(w_hat) length(w_hat):-1:1];
 c = 0.05; % <(100)c chance of not containing true val
-stdW = sqrt(diag(CovW));
+stdW = max(sqrt(diag(CovW)),eps);
 conf_int = arrayfun(@(x)norminv(1 - c/2,0,x),stdW);
 confbounds = [w_hat-conf_int;flipud(w_hat+conf_int)];
 
@@ -96,16 +96,29 @@ if toggle_plot
     grid on
 
     %%% confidence intervals
+%     subplot(3,3,2)
+%     h=fill(xflip,confbounds,'red','FaceColor',[1 0.8 0.8],'edgecolor','none'); hold on;
+%     % h1=plot(1:length(w_hat),(w_hat-true_vec)./abs(true_vec),'ro',1:length(w_hat),w_hat*0,'b--');
+%     h1=plot(1:length(w_hat),w_hat,'ro',1:length(w_hat),true_vec,'bx');
+%     hold off
+%     legend(h1(1:2),{'{\bf w}_{WENDy}','\bf w^*'},'box','off','location','best')
+%     title([num2str((1-c)*100),'% confidence bounds'],'fontsize',9)
+%     set(gca,'Xtick',1:length(w_hat))
+%     xlim([0 length(w_hat)+1])
+%     grid on
+% 
     subplot(3,3,2)
-    h=fill(xflip,confbounds,'red','FaceColor',[1 0.8 0.8],'edgecolor','none'); hold on;
-    % h1=plot(1:length(w_hat),(w_hat-true_vec)./abs(true_vec),'ro',1:length(w_hat),w_hat*0,'b--');
-    h1=plot(1:length(w_hat),w_hat,'ro',1:length(w_hat),true_vec,'bx');
-    hold off
-    legend(h1(1:2),{'{\bf w}_{WENDy}','\bf w^*'},'box','off')
-    title([num2str((1-c)*100),'% confidence bounds'],'fontsize',9)
-    set(gca,'Xtick',1:length(w_hat))
-    xlim([0 length(w_hat)+1])
-    grid on
+h1=plot(1:length(w_hat),w_hat,'ro',1:length(w_hat),true_vec,'bx');hold on
+for j=1:length(true_vec)
+    rectangle('position',[j-0.25 w_hat(j)-conf_int(j) 0.5 2*conf_int(j)]);
+    line([j-0.25 j+0.25],[w_hat(j) w_hat(j)])
+end
+hold off
+legend(h1(1:2),{'{\bf w}_{WENDy}','\bf w^*'},'box','off','location','best')
+title([num2str((1-c)*100),'% confidence bounds'],'fontsize',9)
+set(gca,'Xtick',1:length(w_hat))
+xlim([0 length(w_hat)+1])
+grid on
 
     % ylim([-1 1]*2*range((w_hat-true_vec)./abs(true_vec)))
     
@@ -125,7 +138,7 @@ if toggle_plot
     subplot(3,3,4)
     h1=plot(1:length(tobs),xsub,'k-','linewidth',2);
     hold on;
-    h2=plot(1:length(tobs),xobs,'r.','markersize',10);
+    h2=plot(1:length(tobs),xobs,'r.','markersize',8);
     xlim([1 length(tobs)])
     if toggle_ddd
         h3=plot(1:length(t_learned),x_learned,'--g','linewidth',2);
@@ -154,7 +167,9 @@ if toggle_plot
     legend({'{\bf w}_{WENDy}','{\bf w}^*'},'box','off')
     title(['\bf C^{-1/2}r(U,w). p-val ',num2str(pvals(end))],'fontsize',9)
     xlabel('row num (k)')
-    ylim(max(abs(Res_full))*[-1.5 1.5])
+    if max(abs(Res_full))
+        ylim(max(abs(Res_full))*[-1.5 1.5])
+    end
     grid on
 
     
@@ -169,7 +184,9 @@ if toggle_plot
     title('\bf C^{-1/2}r(U,w) vs. C^{-1/2}L_w\epsilon','fontsize',9)
     xlabel('row num (k)')
     legend({'\bfr(U,w)','\bfL_w\epsilon'},'location','best','box','off')
-    ylim(max(abs(Res_full))*[-1.5 1.5])
+    if max(abs(Res_full))
+        ylim(max(abs(Res_full))*[-1.5 1.5])
+    end
     grid on
 
 
@@ -195,7 +212,9 @@ if toggle_plot
     legend({'{\bf w}_{WENDy}','{\bf w}^*'},'box','off')
     title(['\bf r(U,w). p-val ',num2str(outn(@swtest,res_0(:,1),2))],'fontsize',9)
     xlabel('row num (k)')
-    ylim(max(abs(res_0(:,1)))*[-1.5 1.5])
+    if max(abs(res_0(:,1)))
+        ylim(max(abs(res_0(:,1)))*[-1.5 1.5])
+    end
     grid on
 
     
@@ -203,7 +222,9 @@ if toggle_plot
     subplot(3,3,9)
     plot(1:length(Res_full),[w_error_response int_error nonlin_res],'-.','LineWidth',2.5);
     xlim([1 length(b_0)])
-    ylim(max(abs(Res_full))*[-1.5 1.5])
+    if max(abs(Res_full))
+        ylim(max(abs(Res_full))*[-1.5 1.5])
+    end
     legend({'{\bfr}_0','{\bfe}_{int}','\bfh'},'location','best','box','off')
     title('other residual components','fontsize',9)
     xlabel('row num (k)')

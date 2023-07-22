@@ -13,18 +13,18 @@ odes={'wendydata_Logistic_Growth.mat',...
 
 ode_num = 1;                       % select ODE from list above
 load(odes{ode_num},'t','x','features','params','x0','true_vec','rhs_p');
-custom_ode;
+% custom_ode;
 
 %% subsample timepoints
 
-subsamp = 4;                       % subsample data in time
+subsamp = 2;                       % subsample data in time
 tobs = t(1:subsamp:end); xsub = x(1:subsamp:end,:);
 [M,nstates] = size(xsub);
 
 %% add noise
 
 rng(1);
-noise_ratio = 0.05;
+noise_ratio = 0.2;
 noise_dist = 0;
 noise_alg = 0;
 rng_seed = rng().Seed; rng(rng_seed);
@@ -36,11 +36,11 @@ rng_seed = rng().Seed; rng(rng_seed);
 wendy_snf_params;
 
 %%% set weak integration
-phifun = phifuns{1};                % defined in wendy_snf_params.m
-meth = 'mtmin';                     % 'mtmin','FFT','direct','timefrac'
-mt_params = 2.^(0:3);               % see get_rad.m
-K_max = 5000;
-K_min = length(true_vec)*2;
+phifun = phifuns{2};                % defined in wendy_snf_params.m
+meth = 'direct';                    % 'mtmin','FFT','direct','timefrac'
+mt_params = 11;               % see get_rad.m
+K_max = 370;
+K_min = length(true_vec);
 mt_max = max(floor((M-1)/2)-K_min,1);
 mt_min = rad_select(tobs,xobs,phifun,1,submt,0,1,2,mt_max,[]);
 mt_cell = cellfun(@(x,y) [x,{y}], repmat({{phifun,meth}},length(mt_params),1),num2cell(mt_params(:)),'uni',0);

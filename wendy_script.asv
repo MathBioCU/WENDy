@@ -11,21 +11,20 @@ odes={'wendydata_Logistic_Growth.mat',...
     'wendydata_Hindmarsh-Rose.mat',...
     'wendydata_biochemM1.mat'};
 
-ode_num = 3;                       % select ODE from list above
-warning('off','MATLAB:dispatcher:UnresolvedFunctionHandle')
+ode_num = 1;                       % select ODE from list above
 load(odes{ode_num},'t','x','features','params','x0','true_vec','rhs_p');
-custom_ode;
+% custom_ode;
 
 %% subsample timepoints
 
-subsamp = 1;                       % subsample data in time
+subsamp = 2;                       % subsample data in time
 tobs = t(1:subsamp:end); xsub = x(1:subsamp:end,:);
 [M,nstates] = size(xsub);
 
 %% add noise
 
-rng('shuffle');
-noise_ratio = 0.1;
+rng(1);
+noise_ratio = 0.2;
 noise_dist = 0;
 noise_alg = 0;
 rng_seed = rng().Seed; rng(rng_seed);
@@ -37,10 +36,10 @@ rng_seed = rng().Seed; rng(rng_seed);
 wendy_snf_params;
 
 %%% set weak integration
-phifun = phifuns{1};                % defined in wendy_snf_params.m
-meth = 'mtmin';                    % 'mtmin','FFT','direct','timefrac'
-mt_params = 2.^(0:3);               % see get_rad.m
-K_max = 5000;
+phifun = phifuns{2};                % defined in wendy_snf_params.m
+meth = 'direct';                    % 'mtmin','FFT','direct','timefrac'
+mt_params = 11;               % see get_rad.m
+K_max = 370;
 K_min = length(true_vec);
 mt_max = max(floor((M-1)/2)-K_min,1);
 mt_min = rad_select(tobs,xobs,phifun,1,submt,0,1,2,mt_max,[]);
@@ -50,6 +49,7 @@ mt_cell = cellfun(@(x,y) [x,{y}], repmat({{phifun,meth}},length(mt_params),1),nu
 
 toggle_plot = 1;
 toggle_ddd = 1;
+x0_test = x0+0.01;
 toggle_nls = 0;
 
 %% run WENDy
@@ -62,13 +62,13 @@ tic;
     mt_cell,mt_min,mt_max,K_min,K_max,center_scheme,toggle_VVp_svd,...
     w0,optim_params,err_norm,iter_diff_tol,max_iter,diag_reg,pvalmin,check_pval_it,use_true);
 total_time = toc;
-err_wendy = errs(end);
+err_windy = errs(end);
 
 %% compare with NLS
 
 tol_ode_nls = 10^-6;
 bnds = {[],[]};
-odemethod_nls = 'ode45'; % 'ode15s', 'ode45'
+odemethod_nls = 'ode15s'; % 'ode15s', 'ode45'
 sigma_x0_nls = 0;
 param_init_true = 1;
 sigma_param_init_nls = 0.25;
@@ -104,6 +104,17 @@ else
     param_nls = true_vec*0;
     err_NLS = [];
     total_time_nls = [];
+end
+
+%% compute data-drive dynamics
+
+if toggle_ddd
+    ind = inf; % choose which weights to generate from
+    tol_ode = 1e-12;
+    w_jac_cell = vec2cell(w_hat_its(:,min(ind,end)),cellfun(@(x)length(x),features));
+    options_ode_sim = odeset('RelTol',tol_ode,'AbsTol',tol_ode*ones(1,length(x0)));
+    [t_learned,x_learned]=ode45(@(t,x)rhs_p(x,w_jac_cell),tobs,x0,options_ode_sim);
+    [t_learned,x_learned]=ode45(@(t,x)rhs_p(x,w_jac_cell),tobs,x0,options_ode_sim);
 end
 
 %% display results

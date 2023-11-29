@@ -119,7 +119,7 @@ fignum=fignum+1;
 plot(res_0(:,1),'LineWidth',2)
 hold off;
 xlim([1 length(b_0)])
-legend({'{\bf w}_{WENDy}','{\bf w}^*'},'box','off')
+legend('{\bf w}_{WENDy}','box','off')
 title(['\bf r(U,w). p-val ',num2str(outn(@swtest,res_0(:,1),2))],'fontsize',9)
 xlabel('row num (k)')
 if max(abs(res_0(:,1)))

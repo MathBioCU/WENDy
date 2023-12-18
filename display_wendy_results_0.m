@@ -18,6 +18,7 @@ if toggle_ddd
     tol_ode = 1e-12;
     options_ode_sim = odeset('RelTol',tol_ode,'AbsTol',tol_ode*ones(1,length(x0)));
     [t_learned,x_learned]=ode45(@(t,x)rhs_wendy(x),tobs,x0,options_ode_sim);
+    % [t_learned,x_learned]=ode15s(@(t,x)rhs_wendy(x),tobs,x0,options_ode_sim);
 end
 
 %%% compute FFTs

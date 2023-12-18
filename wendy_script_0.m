@@ -5,8 +5,8 @@
 
 %% generate data
 
-% [t,x,features,params,x0,true_vec,rhs_p] = load_ode();
-[t,x,features,~,~,~,~] = load_ode(); % see load_ode for structurs of t,x,features
+[t,x,features,params,x0,true_vec,rhs_p] = load_ode();
+% [t,x,features,~,~,~,~] = load_ode(); % see load_ode for structurs of t,x,features
 
 %% subsample timepoints
 
@@ -82,7 +82,7 @@ function [t,x,features,params,x0,true_vec,rhs_p] = load_ode()
     numeq = 3;
     beta = 0.5; gamma = 0.1; delta = 0.1;
     x0 = [0.99 0.01 0]';
-    t = 0:0.1:100;
+    t = 0:0.25:80;
     
     features = cell(numeq,1);
     features{1} = {@(S,I,R) S.*I, @(S,I,R) R};
